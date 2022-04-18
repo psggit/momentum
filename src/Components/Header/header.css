@@ -1,0 +1,27 @@
+#Header .logo {
+  font-weight: 500;
+  font-size: 35px;
+  line-height: 22px;
+  color: #FFFFFF;
+  margin-left: 0;
+  margin-right: 20px;
+}
+
+#Header .nav-items {
+  display: flex;
+  align-items: center;
+  margin-right: 0;
+}
+
+#Header .menu-item {
+  margin-right: 14px;
+  cursor: pointer;
+  color: #FFFFFF;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 22px;
+}
+
+#Header .login {
+  text-transform: uppercase;
+}

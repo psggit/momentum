@@ -1,0 +1,24 @@
+{
+  "home": {
+    "section1": {
+      "title": "Introduction & Marketingg",
+      "note": "Net worth ranking",
+      "btnText": "Try a demo"
+    },
+    "section2": {
+      "title": "Product functions summary",
+      "note": "Förpappring tiplagen. Durade äliga dide. Des niliga ask. Tirun syssna. Ber vikäns böspesade. Busamma transgam: och faskade. Infranpogt ruskap. Prede antilig för rerade.",
+      "btnText": "Learn more"
+    },
+    "section3": {
+      "title": "Security",
+      "note": "We apply Bank-Level security. We don't store your banking credentials and have read-only access. We cannot move funds or initiate transfers. Your data is only accessed if you require assistance and have consented.",
+      "btnText": "Learn more"
+    },
+    "section4": {
+      "title": "New Apps",
+      "note": "All your Assets in one App: Brokerage Accounts, Real Estate, Crypto, Bank Accounts, Startups, Precious Metals and much more!",
+      "btnText": "Learn more"
+    }
+  }
+}
