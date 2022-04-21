@@ -8,6 +8,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { IconButton } from "@mui/material";
 import femaleIcon from "./../../Images/female.png";
 import maleIcon from "./../../Images/male.png";
+import { createUser } from "./../../utils/http/index";
 
 const SignupPopup = () => {
   const [inputs, setInputs] = useState({
@@ -45,7 +46,36 @@ const SignupPopup = () => {
 
   const handleCreateAccount = () => {
     validateInputFields();
-    if (!errorObj.hasError) console.log("inputs", inputs);
+    if (!errorObj.hasError) {
+      createMomentumUser();
+    }
+  };
+
+  const getFormattedDate = (date) => {
+    const formattedDate = new Date(date);
+    return `${formattedDate.getDay()}/${formattedDate.getMonth()}/${formattedDate.getFullYear()}`;
+  };
+
+  const createMomentumUser = () => {
+    setIsCreatingAccnt(true);
+    const payload = {
+      username: inputs.username,
+      dob: getFormattedDate(inputs.dob),
+      gender: "female",
+      phoneNumber: inputs.phone,
+      country: inputs.country,
+      mailId: inputs.email,
+    };
+
+    createUser(payload)
+      .then((response) => {
+        window.location.href = "/dashboard";
+        setIsCreatingAccnt(false);
+      })
+      .catch((error) => {
+        console.log("Error in creating user", error);
+        setIsCreatingAccnt(false);
+      });
   };
 
   const handleChange = (e) => {

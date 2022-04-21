@@ -129,7 +129,7 @@ const Products = () => {
 
 const useStyles = makeStyles((theme) => ({
   section: {
-    padding: "100px 130px 200px 130px",
+    padding: "100px 130px 100px 130px",
     "@media (max-width: 900px)": {
       padding: "50px 30px 100px 30px",
     },
@@ -150,7 +150,7 @@ const useStyles = makeStyles((theme) => ({
     background: "rgba(28, 133, 232, 0.1)",
     borderRadius: "10px 10px 0px 0px !important",
     textTransform: "capitalize !important",
-    fontSize: 28,
+    fontSize: "28px !important",
     "&.Mui-selected": {
       background: "#1C85E8",
       color: "#FFFFFF !important",

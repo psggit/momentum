@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    padding: "100px 130px 200px 130px",
+    padding: "100px 130px 100px 130px",
     "@media (max-width: 900px)": {
       padding: "50px 30px 100px 30px",
     },

@@ -23,12 +23,14 @@ import "./../../../src/i18n.js";
 import clsx from "clsx";
 import DialogBox from "../Dialog";
 import { authentication } from "../../firebase";
+import SignupPopup from "./../../Components/SignupPopup/index";
 import {
   //getAuth,
   RecaptchaVerifier,
   signInWithPhoneNumber,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { getLanguages, loginUser } from "./../../utils/http/index";
 
 const Header = ({ currentRoute, isLoggedIn }) => {
   const classes = useStyles();
@@ -49,6 +51,9 @@ const Header = ({ currentRoute, isLoggedIn }) => {
 
   const [phoneno, setPhoneno] = useState();
   const [otp, setOtp] = useState();
+
+  const [supportedLanguages, setSupportedLanguages] = useState([]);
+  const [showSignup, setShowSignup] = useState(false);
 
   const {
     mobileView,
@@ -75,6 +80,21 @@ const Header = ({ currentRoute, isLoggedIn }) => {
       window.removeEventListener("resize", () => setResponsiveness());
     };
   }, []);
+
+  useEffect(() => {
+    fetchLanguages();
+  }, []);
+
+  const fetchLanguages = () => {
+    getLanguages()
+      .then((response) => {
+        console.log("lang resp", response);
+        setSupportedLanguages(response);
+      })
+      .catch((error) => {
+        console.log("Error in fetching languages", error);
+      });
+  };
 
   const handleChange = useCallback((e) => {
     setState((prevState) => ({ ...prevState, selectedLang: e.target.value }));
@@ -110,18 +130,16 @@ const Header = ({ currentRoute, isLoggedIn }) => {
             classes={{ select: classes.select }}
             inputProps={{ "aria-label": "Without label" }}
           >
-            <MenuItem value="en" className={classes.menuItem}>
-              <img src={EngIcon} className={classes.menuItemImg} alt="" />
-              <span>En</span>
-            </MenuItem>
-            <MenuItem value="hi" className={classes.menuItem}>
-              <img src={EngIcon} className={classes.menuItemImg} alt="" />
-              <span>Hi</span>
-            </MenuItem>
-            <MenuItem value="fr" className={classes.menuItem}>
-              <img src={EngIcon} className={classes.menuItemImg} alt="" />
-              <span>Fr</span>
-            </MenuItem>
+            {supportedLanguages &&
+              supportedLanguages.length > 0 &&
+              supportedLanguages.map((language) => {
+                return (
+                  <MenuItem value={language.code} className={classes.menuItem}>
+                    <img src={EngIcon} className={classes.menuItemImg} alt="" />
+                    <span>{language.label}</span>
+                  </MenuItem>
+                );
+              })}
           </Select>
         </React.Fragment>
         <Box sx={{ flexGrow: 1 }} />
@@ -132,6 +150,11 @@ const Header = ({ currentRoute, isLoggedIn }) => {
 
   const handleRouteChange = (selectedRoute) => {
     if (currentRoute !== selectedRoute) window.location.assign(selectedRoute);
+  };
+
+  const handleOtpChange = (otp) => {
+    setOtp(otp);
+    setState((prevState) => ({ ...prevState, isInvalidOtp: false }));
   };
 
   const displayMobile = () => {
@@ -294,20 +317,20 @@ const Header = ({ currentRoute, isLoggedIn }) => {
       });
   };
 
-  const verifyOtp = (e) => {
+  const verifyOtp = async (e) => {
     setState((prevState) => ({ ...prevState, isVerifyingCode: true }));
     window.confirmationResult
       .confirm(otp)
       .then((result) => {
-        const user = result.user;
-        localStorage.setItem("userInfo", JSON.stringify(user));
+        //const user = result.user;
+
         setState((prevState) => ({
           ...prevState,
           isLoginClicked: false,
-          isVerifyingCode: false,
+          //isVerifyingCode: false,
         }));
         //navigate("/dashboard");
-        window.location.href = "/dashboard";
+        loginUserAccount();
       })
       .catch((error) => {
         setState((prevState) => ({
@@ -315,6 +338,32 @@ const Header = ({ currentRoute, isLoggedIn }) => {
           isInvalidOtp: true,
           isVerifyingCode: false,
         }));
+      });
+  };
+
+  const loginUserAccount = () => {
+    loginUser({
+      mobile: phoneno.substring(3),
+    })
+      .then((response) => {
+        //console.log("response", response);
+        if (response.message.toLowerCase().includes("existing")) {
+          localStorage.setItem("userInfo", JSON.stringify(response.user));
+          window.location.href = "/dashboard";
+        } else {
+          setShowSignup(true);
+        }
+        setState((prevState) => ({
+          ...prevState,
+          isVerifyingCode: false,
+        }));
+      })
+      .catch((error) => {
+        setState((prevState) => ({
+          ...prevState,
+          isVerifyingCode: false,
+        }));
+        console.log("Error in logging user", error);
       });
   };
 
@@ -360,7 +409,7 @@ const Header = ({ currentRoute, isLoggedIn }) => {
               <OtpInput
                 numInputs={6}
                 value={otp}
-                onChange={setOtp}
+                onChange={handleOtpChange}
                 inputStyle={{
                   width: "3rem",
                   height: "3rem",
@@ -368,7 +417,9 @@ const Header = ({ currentRoute, isLoggedIn }) => {
                   border: "1px solid rgba(0,0,0,0.3)",
                 }}
               />
-              {isInvalidOtp && <p className="errorNote">Invalid otp</p>}
+              {isInvalidOtp && (
+                <p className={classes.errorNote}>* Invalid otp</p>
+              )}
             </div>
           )}
           {showOtpField && (
@@ -386,6 +437,7 @@ const Header = ({ currentRoute, isLoggedIn }) => {
                 className={classes.loginBtn}
                 color="primary"
                 onClick={verifyOtp}
+                disabled={isVerifyingCode}
               >
                 Verify Code
               </Button>
@@ -397,6 +449,7 @@ const Header = ({ currentRoute, isLoggedIn }) => {
           </p>
         </DialogBox>
       )}
+      {showSignup && <SignupPopup />}
     </header>
   );
 };
