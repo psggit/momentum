@@ -69,7 +69,6 @@ const SignupPopup = () => {
 
     createUser(payload)
       .then((response) => {
-        console.log("user");
         localStorage.setItem("userInfo", JSON.stringify(response));
         setIsCreatingAccnt(false);
         window.location.href = "/dashboard";

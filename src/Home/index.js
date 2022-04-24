@@ -10,6 +10,8 @@ import SectionFourthImage from "./../Images/apps.png";
 import clsx from "clsx";
 import WrapperBox from "../Components/WrapperBox";
 import { useTranslation } from "react-i18next";
+import SectionOneBg from "./../Images/section1bg.png";
+import SectionTwoBg from "./../Images/section2bg.png";
 
 const Home = () => {
   const classes = useStyles();
@@ -32,7 +34,10 @@ const Home = () => {
   return (
     <WrapperBox>
       <div className={classes.container}>
-        <div className={clsx(classes.section, classes.section1)}>
+        <div
+          className={clsx(classes.section, classes.section1)}
+          style={{ backgroundImage: `url(${SectionOneBg})` }}
+        >
           <div className={classes.note}>
             <h1>{t("section1.title")}</h1>
             <p>{t("section1.note")}</p>
@@ -49,7 +54,16 @@ const Home = () => {
             <img src={SectionOneImage} alt="" />
           </div>
         </div>
-        <div className={clsx(classes.section, classes.section2)}>
+        <div
+          className={clsx(classes.section, classes.section2)}
+          style={
+            {
+              // backgroundImage: `url(${SectionTwoBg})`,
+              // backgroundPosition: "unset",
+              // backgroundSize: "499px 697px",
+            }
+          }
+        >
           <div className={classes.note}>
             <h1>{t("section2.title")}</h1>
             <p>{t("section2.note")}</p>
@@ -112,19 +126,29 @@ const useStyles = makeStyles((theme) => ({
   container: {
     "& h1": {
       lineHeight: "71px",
+      fontSize: 65,
     },
     "& p": {
       lineHeight: "35px",
       fontWeight: 300,
       marginBottom: 22,
     },
+    "@media (max-width: 900px)": {
+      "& h1": {
+        fontSize: 30,
+        lineHeight: "36px",
+      },
+    },
   },
   section: {
-    padding: 120,
+    padding: "63px 120px",
     width: "100vw",
     display: "flex",
     alignItems: "center",
     color: "#FFFFFF",
+    backgroundColor: "#102A5E",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
     "@media (max-width: 900px)": {
       flexDirection: "column",
       padding: 50,
@@ -135,7 +159,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   section1: {
-    backgroundColor: "#040506",
+    backgroundColor: "#102A5E",
   },
   section2: {
     backgroundColor: "#092152",

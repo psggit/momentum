@@ -62,7 +62,6 @@ const Aboutus = () => {
 
 const useStyles = makeStyles((theme) => ({
   section1: {
-    backgroundImage: `url("./../Images/aboutus.png")`,
     backgroundSize: "cover",
     width: "100%",
     height: 340,
