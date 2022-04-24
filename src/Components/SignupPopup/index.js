@@ -8,17 +8,19 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { IconButton } from "@mui/material";
 import femaleIcon from "./../../Images/female.png";
 import maleIcon from "./../../Images/male.png";
+import selecteFemaleIcon from "./../../Images/femalec.png";
+import selectedMaleIcon from "./../../Images/malec.png";
 import { createUser } from "./../../utils/http/index";
 
-const SignupPopup = () => {
+const SignupPopup = ({ phone }) => {
   const [inputs, setInputs] = useState({
     profilePic: "",
     username: "",
     country: "",
-    phone: "",
+    phone: phone,
     email: "",
     dob: "",
-    gender: "",
+    gender: "male",
   });
   const [isCreatingAccnt, setIsCreatingAccnt] = useState(false);
   const [errorObj, setErrorObj] = useState({
@@ -61,7 +63,7 @@ const SignupPopup = () => {
     const payload = {
       username: inputs.username,
       dob: getFormattedDate(inputs.dob),
-      gender: "female",
+      gender: inputs.gender,
       phoneNumber: inputs.phone,
       country: inputs.country,
       mailId: inputs.email,
@@ -151,12 +153,12 @@ const SignupPopup = () => {
       </div>
       <div className={classes.genderInfo}>
         <img
-          src={maleIcon}
+          src={inputs.gender !== "male" ? maleIcon : selectedMaleIcon}
           alt="male"
           onClick={() => handleGenderChange("male")}
         />
         <img
-          src={femaleIcon}
+          src={inputs.gender !== "female" ? femaleIcon : selecteFemaleIcon}
           alt="female"
           onClick={() => handleGenderChange("female")}
         />
@@ -213,7 +215,7 @@ const SignupPopup = () => {
             className={classes.inputbase}
             style={{ width: "100%" }}
             defaultValue={inputs.phone}
-            disabled={isCreatingAccnt}
+            disabled={true}
           />
           {errorObj.hasError && errorObj.field === "phone" && (
             <p className={classes.errorNote}>* {errorObj.message}</p>

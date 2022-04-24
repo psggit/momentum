@@ -404,6 +404,7 @@ const Header = ({ currentRoute, isLoggedIn }) => {
           </p>
           <p className={classes.subheader}>Country Code & Phone Number</p>
           <PhoneInput
+            international
             placeholder="Enter phone number"
             value={phoneno}
             onChange={setPhoneno}
@@ -467,7 +468,7 @@ const Header = ({ currentRoute, isLoggedIn }) => {
           </p>
         </DialogBox>
       )}
-      {showSignup && <SignupPopup />}
+      {showSignup && <SignupPopup phone={phoneno} />}
     </header>
   );
 };
