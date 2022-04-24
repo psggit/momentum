@@ -11,7 +11,7 @@ const processResponse = (response) => {
 };
 
 const getBaseUrl = () => {
-  const API_SERVER = "http://52.54.137.205:8080";
+  const API_SERVER = "http://54.92.225.135:8080";
   return API_SERVER;
 };
 

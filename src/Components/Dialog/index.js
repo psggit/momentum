@@ -58,7 +58,8 @@ const DialogBox = React.memo((props) => {
       onClose={handleClose}
       aria-labelledby="customized-dialog-title"
       open={dialogOpen}
-      className={classes.dialogPaper}
+      //className={classes.dialogPaper}
+      classes={{ paper: classes.dialogPaper }}
       disableBackdropClick
       disableEscapeKeyDown
     >
@@ -83,13 +84,17 @@ const DialogBox = React.memo((props) => {
 
 const useStyles = makeStyles((theme) => ({
   dialogPaper: {
-    margin: 0,
+    margin: "0 !important",
   },
   dialogContent: {
     overflow: "scroll",
     padding: "0 42px 42px 42px !important",
     maxHeight: (props) =>
       `calc(${props.style?.maxHeight ? props.style?.maxHeight : 364}px - 70px)`,
+    "@media (max-width: 900px)": {
+      padding: "20px !important",
+      maxHeight: "100vh !important",
+    },
   },
   hideDialogFooter: {
     display: "none",
@@ -105,10 +110,11 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: 500,
     maxWidth: 672,
     overflow: "hidden",
+
     "@media (max-width: 900px)": {
       minWidth: 120,
-      maxHeight: 300,
-      maxWidth: 300,
+      maxHeight: "100vh",
+      maxWidth: "100vw",
     },
   },
 }));

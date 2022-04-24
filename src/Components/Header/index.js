@@ -11,7 +11,7 @@ import { Link as RouterLink } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import { homeMenuItems } from "./routes";
+import { homeMenuItems, userMenuItems } from "./routes";
 import { makeStyles } from "@mui/styles";
 import EngIcon from "./../../Images/united-kingdom.png";
 import { useTranslation } from "react-i18next";
@@ -216,20 +216,37 @@ const Header = ({ currentRoute, isLoggedIn }) => {
   const getMenuItems = () => {
     return (
       <div className="nav-items">
-        {homeMenuItems.map((item) => {
-          const active = isActive(item.path);
-          return (
-            <div
-              className={clsx(
-                active ? `active ${classes.activeMenuListItem}` : "",
-                "menu-item"
-              )}
-              onClick={() => handleRouteChange(item.path)}
-            >
-              {item.name}
-            </div>
-          );
-        })}
+        {!isLoggedIn &&
+          homeMenuItems.map((item) => {
+            const active = isActive(item.path);
+            return (
+              <div
+                className={clsx(
+                  active ? `active ${classes.activeMenuListItem}` : "",
+                  "menu-item"
+                )}
+                onClick={() => handleRouteChange(item.path)}
+              >
+                {item.name}
+              </div>
+            );
+          })}
+
+        {isLoggedIn &&
+          userMenuItems.map((item) => {
+            const active = isActive(item.path);
+            return (
+              <div
+                className={clsx(
+                  active ? `active ${classes.activeMenuListItem}` : "",
+                  "menu-item"
+                )}
+                onClick={() => handleRouteChange(item.path)}
+              >
+                {item.name}
+              </div>
+            );
+          })}
 
         {!isLoggedIn && (
           <Button
@@ -324,11 +341,6 @@ const Header = ({ currentRoute, isLoggedIn }) => {
       .then((result) => {
         //const user = result.user;
 
-        setState((prevState) => ({
-          ...prevState,
-          isLoginClicked: false,
-          //isVerifyingCode: false,
-        }));
         //navigate("/dashboard");
         loginUserAccount();
       })
@@ -356,12 +368,14 @@ const Header = ({ currentRoute, isLoggedIn }) => {
         setState((prevState) => ({
           ...prevState,
           isVerifyingCode: false,
+          isLoginClicked: false,
         }));
       })
       .catch((error) => {
         setState((prevState) => ({
           ...prevState,
           isVerifyingCode: false,
+          isLoginClicked: false,
         }));
         console.log("Error in logging user", error);
       });
@@ -377,7 +391,11 @@ const Header = ({ currentRoute, isLoggedIn }) => {
           id="login"
           title="Welcome!"
           handleCloseDialog={handleClose}
-          styleObj={{ width: "561px", maxHeight: "472px" }}
+          styleObj={{
+            width: mobileView ? "100vw" : "561px",
+            height: mobileView ? "100vh" : undefined,
+            maxHeight: mobileView ? "100vh" : "472px",
+          }}
         >
           <div id="recaptcha-container"></div>
           <p className={classes.subtitle}>

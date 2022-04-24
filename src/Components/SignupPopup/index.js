@@ -69,12 +69,14 @@ const SignupPopup = () => {
 
     createUser(payload)
       .then((response) => {
-        window.location.href = "/dashboard";
+        console.log("user");
+        localStorage.setItem("userInfo", JSON.stringify(response));
         setIsCreatingAccnt(false);
+        window.location.href = "/dashboard";
       })
       .catch((error) => {
-        console.log("Error in creating user", error);
         setIsCreatingAccnt(false);
+        console.log("Error in creating user", error);
       });
   };
 
