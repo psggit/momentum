@@ -47,6 +47,8 @@ const Header = ({ currentRoute, isLoggedIn }) => {
     showOtpField: false,
     phoneno: "",
     isInvalidOtp: false,
+    isSendingCode: false,
+    isVerifyingCode: false,
   });
 
   const [phoneno, setPhoneno] = useState();
@@ -61,6 +63,7 @@ const Header = ({ currentRoute, isLoggedIn }) => {
     selectedLang,
     isLoginClicked,
     showOtpField,
+    isSendingCode,
     isInvalidOtp,
     isVerifyingCode,
   } = state;
@@ -315,22 +318,33 @@ const Header = ({ currentRoute, isLoggedIn }) => {
     );
   };
 
+  const handleClickHere = () => {
+    setState((prevState) => ({ ...prevState, showOtpField: false }));
+  };
+
   const requestOtp = (e) => {
     e.preventDefault();
-    generateRecaptcha();
+    setState((prevState) => ({ ...prevState, isSendingCode: true }));
+    if (window.recaptchaVerifier === undefined) {
+      generateRecaptcha();
+    }
     const phoneNumber = phoneno;
     const appVerifier = window.recaptchaVerifier;
-
     signInWithPhoneNumber(authentication, phoneNumber, appVerifier)
       .then((confirmationResult) => {
         // SMS sent. Prompt user to type the code from the message, then sign the
         // user in with confirmationResult.confirm(code).
         window.confirmationResult = confirmationResult;
         console.log("otp has been sent");
-        setState((prevState) => ({ ...prevState, showOtpField: true }));
+        setState((prevState) => ({
+          ...prevState,
+          showOtpField: true,
+          isSendingCode: false,
+        }));
       })
       .catch((error) => {
-        console.log("Error in sending otp");
+        setState((prevState) => ({ ...prevState, isSendingCode: false }));
+        console.log("Error in sending otp", error);
       });
   };
 
@@ -408,6 +422,7 @@ const Header = ({ currentRoute, isLoggedIn }) => {
             placeholder="Enter phone number"
             value={phoneno}
             onChange={setPhoneno}
+            disabled={isSendingCode || showOtpField}
           />
           {!showOtpField && (
             <Button
@@ -415,6 +430,7 @@ const Header = ({ currentRoute, isLoggedIn }) => {
               className={classes.loginBtn}
               color="primary"
               onClick={requestOtp}
+              disabled={isSendingCode}
             >
               Send Code
             </Button>
@@ -442,26 +458,39 @@ const Header = ({ currentRoute, isLoggedIn }) => {
             </div>
           )}
           {showOtpField && (
-            <div style={{ display: "flex" }}>
-              <Button
-                variant="outlined"
-                className={classes.loginBtn}
-                onClick={requestOtp}
-                style={{ marginRight: 20 }}
-              >
-                Send New Code
-              </Button>
-              <Button
-                variant="contained"
-                className={classes.loginBtn}
-                color="primary"
-                onClick={verifyOtp}
-                disabled={isVerifyingCode}
-              >
-                Verify Code
-              </Button>
-            </div>
+            <>
+              <div style={{ display: "flex" }}>
+                <Button
+                  variant="outlined"
+                  className={classes.loginBtn}
+                  onClick={requestOtp}
+                  style={{ marginRight: 20 }}
+                  disabled={isSendingCode}
+                >
+                  Send New Code
+                </Button>
+                <Button
+                  variant="contained"
+                  className={classes.loginBtn}
+                  color="primary"
+                  onClick={verifyOtp}
+                  disabled={isVerifyingCode}
+                >
+                  Verify Code
+                </Button>
+              </div>
+              <div className={classes.warningContainer}>
+                <span className={classes.warning}>
+                  Did you enter a wrong number or would you like to change your
+                  number?
+                </span>
+                <a href="#" onClick={() => handleClickHere()}>
+                  Click here
+                </a>
+              </div>
+            </>
           )}
+
           <p className={classes.note}>
             By providing your phone number, you consent to receiving a one-time
             passcode sent by text message to help you sign into App.
@@ -542,6 +571,12 @@ const useStyles = makeStyles((theme) => ({
   },
   errorNote: {
     color: "#C81922",
+  },
+  warningContainer: {
+    marginBottom: 10,
+  },
+  warning: {
+    marginRight: 10,
   },
 }));
 

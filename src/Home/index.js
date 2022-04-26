@@ -130,6 +130,7 @@ const useStyles = makeStyles((theme) => ({
     },
     "& p": {
       lineHeight: "35px",
+      fontSize: 24,
       fontWeight: 300,
       marginBottom: 22,
     },
